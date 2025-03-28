@@ -1,5 +1,5 @@
 #include <iostream>
 main()
 {
-    cout<<"hello"
+    cout<<"hello"<<"i north hode"
 }
