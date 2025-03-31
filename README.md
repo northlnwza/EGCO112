@@ -4,4 +4,5 @@ https://miro.com/welcomeonboard/S2VjU0VWb21TWTJ5amZuajB3aG5ZSzhadzh1aHA2TEZyakFB
 To merge
 
 git merge "origin/BranchName"
+
 git push
