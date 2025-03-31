@@ -1,2 +1,7 @@
 #EGCO112
 https://miro.com/welcomeonboard/S2VjU0VWb21TWTJ5amZuajB3aG5ZSzhadzh1aHA2TEZyakFBOXlzWVBVY1lmR05MTitrMnNVOXZacXY3QUw2eFBzQmZKRThGVFdaTS9zbHVtdXY2WTA4d0dDalVaZlVLWFpQVFRqWUVCblY4RzRCOXFMOVVQckhiVGxiVXZNRWlhWWluRVAxeXRuUUgwWDl3Mk1qRGVRPT0hdjE=?share_link_id=502068741275
+
+To merge
+
+git merge "origin/BranchName"
+git push
