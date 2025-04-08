@@ -1,9 +1,3 @@
-compile: skibidi.cpp
-	g++ skibidi.cpp
-run: skibidi.cpp
-	./a.out
-test: main.cpp, User.cpp, UserList.cpp
-	g++ main.cpp User.cpp UserList.cpp
+compile:
+	g++ main.cpp Auth.cpp UserList.cpp -lncurses -o auth_app
 
-in:
-	sudo apt install libncurses-dev

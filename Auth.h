@@ -1,15 +1,13 @@
 #ifndef AUTH_H
 #define AUTH_H
 
-#include "User.h"
+#include <string>
 
-class Auth : public User {
+class Auth {
 public:
-    Auth(string uname = "", string pass = "", string sid = "");
-
-    bool login(string uname, string pass);
-    bool registerUser();
-    bool resetPassword(string uname, string newPass);
+    static bool login(const std::string& username, const std::string& password);
+    static bool registerUser(const std::string& username, const std::string& password);
+    static std::string recoverPassword(const std::string& username);
 };
 
 #endif

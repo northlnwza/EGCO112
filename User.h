@@ -2,24 +2,15 @@
 #define USER_H
 
 #include <string>
-using namespace std;
 
 class User {
-protected:
-    string username;
-    string password;
-    string studentID;
-
 public:
-    User(string uname = "", string pass = "", string sid = "");
+    std::string username;
+    std::string password;
+    int studentID;
+    User* next;
 
-    virtual void display();
-    string getUsername() const;
-    string getPassword() const;
-    string getStudentID() const;
-
-    void setPassword(string newPass);
-    void setStudentID(string sid);
+    User(std::string uname, std::string pwd, int id);
 };
 
 #endif
