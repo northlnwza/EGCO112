@@ -3,6 +3,6 @@
 #include "c.h"
 
 int main(){
-    Interface();
+    //Interface();
     return 0;
 }
