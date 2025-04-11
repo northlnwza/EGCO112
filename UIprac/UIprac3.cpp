@@ -5,17 +5,17 @@
 using namespace std;
 #include <iostream>
 
-void show_popup(string message) {
-    int height = 7;
-    int width = 40;
+void show_popup(int h,int w,string message) {
+    int height = h;
+    int width = w;
     int starty = (LINES - height) / 2;
     int startx = (COLS - width) / 2;
 
     // Create a new window
     WINDOW* popup = newwin(height, width, starty, startx);
     box(popup, 0, 0); // Draw border
-    mvwprintw(popup, 2, (width - message.length()) / 2, message.c_str());
-    mvwprintw(popup, 4, (width) / 2, "Press any key to close");
+    //mvwprintw(popup, 2, (width - message.length()) / 2, message.c_str());
+    //mvwprintw(popup, 4, (width) / 2, "Press any key to close");
     wrefresh(popup);
 
     getch(); // Wait for user input
@@ -32,7 +32,10 @@ int main() {
     printw("This is the main screen.");
     refresh();
 
-    show_popup("Hello from ncurses!");
+    show_popup(7,40,"Hello from ncurses!");
+    mvwprintw(popup, 2, width / 2, "hi");
+    show_popup(2,38," ");
+    mvwprintw(popup, 2, width / 2, "hi");
 
     endwin(); // End ncurses mode
     return 0;

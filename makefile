@@ -6,3 +6,5 @@ run: main.cpp
 	./a.out
 test: UItest.cpp
 	g++ UItest.cpp -lncurses
+prac: UIprac
+	g++ UIprac/UIprac5.cpp -lncurses

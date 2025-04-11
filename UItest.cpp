@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <iostream>
-#include "Button.h"
+
+#include "Tools.h"
 
 int main() {
     initscr();

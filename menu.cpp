@@ -2,7 +2,7 @@
 #define MENU_CPP
 
 #include "User.h"
-#include "Tools.h"
+#include "UI_Tools.h"
 
 #include <ncurses.h>
 #include <string>
@@ -14,7 +14,16 @@ void menu(){
     noecho();                     // Don't echo input
     keypad(stdscr, TRUE);         // Enable special keys
     //mousemask(ALL_MOUSE_EVENTS, NULL); // Enable all mouse events
+    start_color();
+    use_default_colors();
     curs_set(0);                  // Hide the cursor
+
+    if (!has_colors()) {
+        endwin();
+        printf("Your terminal doesn't support color!\n");
+        exit(0);
+    }
+    else setup_color();
 
     int win_height = 24, win_width = 80;
     int starty = (LINES - win_height) / 2;
@@ -23,10 +32,13 @@ void menu(){
     WINDOW* win = newwin(win_height, win_width, starty, startx);
     box(win, 0, 0); // Draw border
 
-    int i;string ten="Ten";
-    wattron(win,A_BOLD);
+    screenLoading(win);
+
+    int i;
+    string ten="Ten";
+    wattron(win,COLOR_PAIR(2));
     showCentered(win,2,"Welcome Student : "+ten);
-    wattroff(win,A_BOLD);
+    wattroff(win,COLOR_PAIR(2));
     for (i=1;i<79;i++) {mvwprintw(win,4,i,"-");}
     
     wrefresh(win);
@@ -35,9 +47,6 @@ void menu(){
     endwin();
 }
 
-void showCentered(WINDOW* win, int y, const string& text) {
-    int x = (getmaxx(win) - text.length()) / 2;
-    mvwprintw(win, y, x, "%s", text.c_str());
-}
+
 
 #endif

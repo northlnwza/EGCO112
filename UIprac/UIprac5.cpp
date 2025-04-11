@@ -36,7 +36,7 @@ int main() {
     // Wait for mouse click
     MEVENT event;
     int ch;
-    while ((ch = wgetch(win)) != 'q') {
+    while ((ch = getch()) != 'q') {
         if (ch == KEY_MOUSE && getmouse(&event) == OK) {
             int click_y = event.y ;
             int click_x = event.x ;
