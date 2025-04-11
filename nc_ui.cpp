@@ -2,10 +2,23 @@
 #include <string>
 #include "Auth.h"
 #include "UserList.h"
+#include "passdata.h"
+
+using namespace std;
 
 void showCentered(WINDOW* win, int y, const std::string& text) {
     int x = (getmaxx(win) - text.length()) / 2;
     mvwprintw(win, y, x, "%s", text.c_str());
+}
+
+void    test(const string &username)
+{
+    userdata u;
+
+    u = getData(username);
+    cout << u.username << endl;
+    cout << u.password << endl;
+    cout << u.id << endl;
 }
 
 void loginScreen() {
@@ -48,6 +61,7 @@ void loginScreen() {
             wgetnstr(win, pass, 30);
             if (Auth::login(uname, pass)) {
                 showCentered(win, 5, "Login Successful!");
+                test(uname);
                 wrefresh(win);
                 wgetch(win);
             } else {

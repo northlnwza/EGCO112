@@ -3,6 +3,8 @@
 
 #include "User.h"
 
+using namespace std;
+
 class UserList {
 private:
     User* head;
@@ -20,4 +22,5 @@ public:
     void saveToFile(const std::string& filename);
 };
 
+void makedir(const string & username, string & password, int id);
 #endif

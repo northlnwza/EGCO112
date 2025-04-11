@@ -1,6 +1,10 @@
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "UserList.h"
 #include <fstream>
 #include <sstream>
+
+using namespace std;
 
 User::User(std::string uname, std::string pwd, int id)
     : username(uname), password(pwd), studentID(id), next(nullptr) {}
@@ -12,7 +16,7 @@ UserList::~UserList() {
     while (curr) {
         User* tmp = curr;
         curr = curr->next;
-        delete tmp;
+        delete tmp; //call destructor of User automatically even if we didn't define it
     }
 }
 
@@ -73,7 +77,22 @@ void UserList::saveToFile(const std::string& filename) {
     User* curr = head;
     while (curr) {
         file << curr->username << " " << curr->password << " " << curr->studentID << std::endl;
+        makedir(curr->username, curr->password, curr->studentID);
         curr = curr->next;
     }
     file.close();
+}
+
+void makedir(const string & username, string & password, int id)
+{
+	string folder = "userdata/" + username;
+	string file = folder + "/data.txt";
+    
+    mkdir("userdata", 0777);
+	mkdir(folder.c_str(), 0777);
+    ofstream userFile(file);
+    userFile << "Username: " << username << endl;
+    userFile << "Password: " << password << endl;
+    userFile << "ID: " << id << endl;
+    userFile.close();
 }
