@@ -2,7 +2,7 @@
 #define MENU_CPP
 
 #include "User.h"
-#include "UI_Tools.h"
+#include "UI_tools.h"
 
 #include <ncurses.h>
 #include <string>
@@ -34,13 +34,8 @@ void menu(){
 
     screenLoading(win);
 
-    int i;
-    string ten="Ten";
-    wattron(win,COLOR_PAIR(2));
-    showCentered(win,2,"Welcome Student : "+ten);
-    wattroff(win,COLOR_PAIR(2));
-    for (i=1;i<79;i++) {mvwprintw(win,4,i,"-");}
-    
+    header(win,"Ten");
+
     wrefresh(win);
     wgetch(win);
     delwin(win);

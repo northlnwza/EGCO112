@@ -9,7 +9,9 @@ using namespace std;
 
 void showCentered(WINDOW*,int,const string&);
 void screenLoading(WINDOW*);
-void setup_color();
+void header(WINDOW*);
+
+void setup_color(); //for setup
 
 class Button{
     
@@ -49,26 +51,40 @@ void screenLoading(WINDOW* win){
         string load=" ";
 
         showCentered(win,10,"Loading...");
-        wattron(win,COLOR_PAIR(2));
+        wattron(win,COLOR_PAIR(9));
         for (i=0;i<21;i++){
-            mvwprintw(win,12,30,load.c_str());
+            mvwprintw(win,12,29,load.c_str());
             usleep(80000);
             wrefresh(win);
             load+=" ";
         }
-        wattroff(win,COLOR_PAIR(2));
+        wattroff(win,COLOR_PAIR(9));
         werase(win);
+        box(win,0,0);
     }
 
 
+void header(WINDOW* win,const string& text){
+    int i;
+    wattron(win,A_BOLD);
+    showCentered(win,1,"-- WeEGCO Menu System --");
+    wattron(win,COLOR_PAIR(5));
+    showCentered(win,2,"Welcome Student : "+text);
+    wattroff(win,COLOR_PAIR(5) | A_BOLD);
+    mvwhline(win,4, 1, '-', 78);
+}
+
+
 void setup_color(){
-    init_pair(1, COLOR_WHITE, -1);   // Default text
-    init_pair(2, COLOR_WHITE, COLOR_GREEN);   // Highlighted text (menu selection)
+    //Font
+    init_pair(1, COLOR_BLACK, -1);   // Default tex
+    init_pair(2, COLOR_RED, -1);     // Errors
     init_pair(3, COLOR_GREEN, -1);   // Success / active
     init_pair(4, COLOR_YELLOW, -1);  // Warnings
-    init_pair(5, COLOR_RED, -1);     // Errors
-    init_pair(6, COLOR_CYAN, -1);    // Prompts or info
-    init_pair(7, COLOR_WHITE, -1);    // Header or title bar
+    init_pair(5, COLOR_CYAN, -1);    // Prompts or info
+    init_pair(6, COLOR_WHITE, -1);   // Highlighted text (menu selection)
+    //Background
+    init_pair(9, -1, COLOR_GREEN);   // Highlighted
 }
 
 #endif
