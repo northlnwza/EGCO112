@@ -1,14 +1,13 @@
+#ifndef PD_H
+#define PD_H
+#include "UserList.h"
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
 using namespace std;
-struct userdata
-{
-    string  username;
-    string  password;
-    int id;
-};
+//User getData(const string &username);
+void    testpass(const string & username);
 
-struct userdata getData(const string &username);
+#endif

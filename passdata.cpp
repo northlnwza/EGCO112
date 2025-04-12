@@ -1,9 +1,12 @@
 
 #include "passdata.h"
+#include "UserList.h"
+#include "Auth.h"
 
-userdata getData(const string &username)
+/*
+User getData(const string &username)
 {
-    userdata u;
+    User u;
     string path = "userdata/" + username + "/data.txt";
     ifstream file(path);
     string line;
@@ -19,7 +22,7 @@ userdata getData(const string &username)
             u.username = line.substr(9);// from index 9 onward
         } else if (line.rfind("ID:", 0) == 0) 
         {
-            u.id = stoi(line.substr(3));
+            u.studentID = stoi(line.substr(3));
         } else if (line.rfind("Password:", 0) == 0)
         {
             u.password = line.substr(9);
@@ -27,4 +30,17 @@ userdata getData(const string &username)
     }
     file.close();
     return u;
+}
+*/
+
+void    testpass(const string & username)
+{
+    User    *loggedInUser;
+
+    loggedInUser = Auth::getData(username);
+    cout << loggedInUser->username << endl;
+    cout << loggedInUser->password << endl;
+    cout << loggedInUser->studentID << endl;
+
+    delete loggedInUser;
 }

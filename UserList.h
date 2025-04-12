@@ -20,6 +20,8 @@ public:
     std::string getPassword(const std::string& username);
     void loadFromFile(const std::string& filename);
     void saveToFile(const std::string& filename);
+    User* findByID(int id);
+    int getID(const std::string& username);
 };
 
 void makedir(const string & username, string & password, int id);

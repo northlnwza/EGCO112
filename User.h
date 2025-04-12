@@ -10,7 +10,7 @@ public:
     int studentID;
     User* next;
 
-    User(std::string uname, std::string pwd, int id);
+    User(std::string uname=0, std::string pwd=0, int id=0);
 };
 
 #endif

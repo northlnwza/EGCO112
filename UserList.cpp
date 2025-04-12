@@ -46,6 +46,26 @@ bool UserList::exists(const std::string& username) {
     return false;
 }
 
+int UserList::getID(const std::string& username) {
+    User* curr = head;
+    while (curr) {
+        if (curr->username == username)
+            return curr->studentID;
+        curr = curr->next;
+    }
+    return -1;
+}
+
+User* UserList::findByID(int id)
+{
+    User* curr = head;
+    while (curr) {
+        if (curr->studentID == id) return curr;
+        curr = curr->next;
+    }
+    return nullptr;
+}
+
 std::string UserList::getPassword(const std::string& username) {
     User* curr = head;
     while (curr) {
@@ -82,6 +102,8 @@ void UserList::saveToFile(const std::string& filename) {
     }
     file.close();
 }
+
+
 
 void makedir(const string & username, string & password, int id)
 {
