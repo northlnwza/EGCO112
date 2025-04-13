@@ -30,7 +30,7 @@ User* Auth::getData(const string & username) // in case after login
 
     list.loadFromFile("users.txt");
     curr = list.findByID(list.getID(username));
-    return new User(curr->username, curr->password, curr->studentID);
+    return new User(curr->username, curr->password, curr->id);
 }
 
 std::string Auth::recoverPassword(const std::string& username) {
