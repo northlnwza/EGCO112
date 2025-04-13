@@ -55,6 +55,15 @@ std::string UserList::getPassword(const std::string& username) {
 }
 
 void UserList::loadFromFile(const std::string& filename) {
+    // เคลียร์ลิงก์ลิสต์เก่าก่อน
+    User* curr = head;
+    while (curr) {
+        User* temp = curr;
+        curr = curr->next;
+        delete temp;
+    }
+    head = nullptr;
+
     std::ifstream file(filename);
     std::string line;
     while (getline(file, line)) {
@@ -63,14 +72,18 @@ void UserList::loadFromFile(const std::string& filename) {
         int id;
         float balance;
         ss >> uname >> pwd >> id >> balance;
+
         User* newUser = new User(uname, pwd, id);
         newUser->balance = balance;
 
+        newUser->next = head; // <<< แทรกที่หัวเหมือน insertUser
         head = newUser;
+
         if (id >= currentID) currentID = id + 1;
     }
     file.close();
 }
+
 
 void UserList::saveToFile(const std::string& filename) {
     std::ofstream file(filename);
