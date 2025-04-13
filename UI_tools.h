@@ -12,7 +12,7 @@ using namespace std;
 void showCentered(WINDOW*,int,const string&);
 void screenLoading(WINDOW*,const string&,int);
 void menuLoading(WINDOW*,const string&,int);
-void header(WINDOW*);
+void header(WINDOW*, User *& u);
 
 void setup_color(); //for setup
 
@@ -92,22 +92,22 @@ void menuLoading(WINDOW* win,const string& text ,int duration){
     }
 
 
-void header(WINDOW* win,const string& uname,const string& menu){
-    User    *u;
+void header(WINDOW* win,User* & u,const string& menu){
+    //User    *u;
     int i;
 
-    u = Auth::getData(uname);
+    //u = Auth::getData(uname);
     wattron(win,A_BOLD);
     showCentered(win,1,"-- WeEGCO Menu System --");
     wattron(win,COLOR_PAIR(5));
-    showCentered(win,2,"Welcome Student : "+uname+ "     ID : "+to_string(u->id));
+    showCentered(win,2,"Welcome Student : "+u->username+ "     ID : "+to_string(u->id));
     //showCentered(win,2,"Welcome Student : "+uname+ "     ID : 6700000");
     wattroff(win,COLOR_PAIR(5));
     showCentered(win,3,"* "+menu+" *");
     wattroff(win, A_BOLD);
     mvwhline(win, 4, 1, ACS_HLINE, 78);
     wrefresh(win);
-    delete u;
+    //delete u;
 }
 
 void clearbody(WINDOW* win){

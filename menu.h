@@ -9,7 +9,7 @@
 #include <string>
 using namespace std;
 
-void Timetable(WINDOW*);
+void Timetable(WINDOW*, User *& u);
 
 void menu(const string & username){
 
@@ -47,7 +47,7 @@ void menu(const string & username){
         box(win,0,0);
         screenLoading(win,"Starting...",1.5);
         //header(win,"Ten","MENU");
-        header(win,u->username,"MENU");
+        header(win,u,"MENU");
         wattron(win,A_BOLD);
         mvwprintw(win,6,3,"[1]  Classroom Time Table");
         mvwprintw(win,8,3,"[2]  Add / Withdraw Courses");
@@ -65,7 +65,7 @@ void menu(const string & username){
             case 'm':
                 break;
             case '1':
-                Timetable(win);
+                Timetable(win, u);
                 break;
         }
     }while (choice != '9');
@@ -76,11 +76,12 @@ void menu(const string & username){
     delete u;
 }
 
-void Timetable(WINDOW* win){
+void Timetable(WINDOW* win, User *& u){
     werase(win);
     box(win, 0, 0);
     menuLoading(win,"Timetable",1);
-    header(win,"Ten","TIMETABLE");
+    //header(win,"Ten","TIMETABLE");
+    header(win,u,"TIMETABLE");
     clearbody(win);
     initTimetable();
     loadCoursesFromFile("course.txt");
