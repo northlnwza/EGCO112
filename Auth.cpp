@@ -2,20 +2,17 @@
 #include "UserList.h"
 #include "passdata.h"
 
-bool Auth::login(const std::string& username, const std::string& password) {
+bool Auth::login(const string& username, const string& password) {
     UserList list;
     bool    status;
+
     list.loadFromFile("users.txt");
-    status = list.verifyUser(username, password);
-    /*
-    if (status)
-        testpass(list, username);
-    */
-    return status;
+    return list.verifyUser(username, password);
 }
 
-bool Auth::registerUser(const std::string& username, const std::string& password) {
+bool Auth::registerUser(const string& username, const string& password) {
     UserList list;
+
     list.loadFromFile("users.txt");
     if (list.exists(username)) return false;
     list.insertUser(username, password);
@@ -33,7 +30,7 @@ User* Auth::getData(const string & username) // in case after login
     return new User(curr->username, curr->password, curr->id);
 }
 
-std::string Auth::recoverPassword(const std::string& username) {
+string Auth::recoverPassword(const string & username) {
     UserList list;
     list.loadFromFile("users.txt");
     return list.getPassword(username);

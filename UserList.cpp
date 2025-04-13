@@ -6,10 +6,9 @@
 
 using namespace std;
 
-User::User(std::string uname, std::string pwd, int id)
-    : username(uname), password(pwd), id(id), next(nullptr) {}
+User::User(string uname, string pwd, int id):username(uname), password(pwd), id(id), next(nullptr) {}
 
-UserList::UserList() : head(nullptr), currentID(1000) {}
+UserList::UserList():head(nullptr), currentID(1000) {}
 
 UserList::~UserList() {
     User* curr = head;
@@ -20,13 +19,13 @@ UserList::~UserList() {
     }
 }
 
-void UserList::insertUser(const std::string& username, const std::string& password) {
+void UserList::insertUser(const string& username, const string& password) {
     User* newUser = new User(username, password, currentID++);
     newUser->next = head;
     head = newUser;
 }
 
-bool UserList::verifyUser(const std::string& username, const std::string& password) {
+bool UserList::verifyUser(const string& username, const string& password) {
     User* curr = head;
     while (curr) {
         if (curr->username == username && curr->password == password)
@@ -36,7 +35,7 @@ bool UserList::verifyUser(const std::string& username, const std::string& passwo
     return false;
 }
 
-bool UserList::exists(const std::string& username) {
+bool UserList::exists(const string& username) {
     User* curr = head;
     while (curr) {
         if (curr->username == username)
@@ -46,7 +45,7 @@ bool UserList::exists(const std::string& username) {
     return false;
 }
 
-int UserList::getID(const std::string& username) {
+int UserList::getID(const string& username) {
     User* curr = head;
     while (curr) {
         if (curr->username == username)
@@ -66,7 +65,7 @@ User* UserList::findByID(int id)
     return nullptr;
 }
 
-std::string UserList::getPassword(const std::string& username) {
+std::string UserList::getPassword(const string& username) {
     User* curr = head;
     while (curr) {
         if (curr->username == username)
@@ -76,12 +75,12 @@ std::string UserList::getPassword(const std::string& username) {
     return "Not found";
 }
 // load from file users.txt format
-void UserList::loadFromFile(const std::string& filename) {
-    std::ifstream file(filename);
-    std::string line;
+void UserList::loadFromFile(const string& filename) {
+    ifstream file(filename);
+    string line;
     while (getline(file, line)) {
-        std::stringstream ss(line);
-        std::string uname, pwd;
+        stringstream ss(line);
+        string uname, pwd;
         int id;
         ss >> uname >> pwd >> id;
         User* newUser = new User(uname, pwd, id);
@@ -121,11 +120,11 @@ User getData(const string &username)
 }
 */
 
-void UserList::saveToFile(const std::string& filename) {
-    std::ofstream file(filename);
+void UserList::saveToFile(const string& filename) {
+    ofstream file(filename);
     User* curr = head;
     while (curr) {
-        file << curr->username << " " << curr->password << " " << curr->id << std::endl;
+        file << curr->username << " " << curr->password << " " << curr->id << endl;
         makedir(curr->username, curr->password, curr->id);
         curr = curr->next;
     }

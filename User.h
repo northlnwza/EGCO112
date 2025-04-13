@@ -3,14 +3,16 @@
 
 #include <string>
 
+using namespace std;
+
 class User {
 public:
-    std::string username;
-    std::string password;
+    string username;
+    string password;
     int id;
     User* next;
 
-    User(std::string uname=0, std::string pwd=0, int id=0);
+    User(string uname=0, string pwd=0, int id=0);
 };
 
 #endif

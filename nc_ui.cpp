@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void showCentered(WINDOW* win, int y, const std::string& text)
+void showCentered(WINDOW* win, int y, const string& text)
 {
     int x = (getmaxx(win) - text.length()) / 2;
     mvwprintw(win, y, x, "%s", text.c_str());
@@ -81,7 +81,7 @@ void loginScreen() {
             char uname[30];
             mvwprintw(win, 2, 2, "Enter Username: ");
             wgetnstr(win, uname, 30);
-            std::string recovered = Auth::recoverPassword(uname);
+            string recovered = Auth::recoverPassword(uname);
             mvwprintw(win, 4, 2, "Recovered Password: %s", recovered.c_str());
             wrefresh(win);
             wgetch(win);

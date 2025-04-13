@@ -14,14 +14,14 @@ public:
     UserList();
     ~UserList();
 
-    void insertUser(const std::string& username, const std::string& password);
-    bool verifyUser(const std::string& username, const std::string& password);
-    bool exists(const std::string& username);
-    std::string getPassword(const std::string& username);
-    void loadFromFile(const std::string& filename);
-    void saveToFile(const std::string& filename);
+    void insertUser(const string& username, const string& password);
+    bool verifyUser(const string& username, const string& password);
+    bool exists(const string& username);
+    string getPassword(const string& username);
+    void loadFromFile(const string& filename);
+    void saveToFile(const string& filename);
     User* findByID(int id);
-    int getID(const std::string& username);
+    int getID(const string& username);
 };
 
 void makedir(const string & username, string & password, int id);
