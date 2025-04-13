@@ -8,7 +8,8 @@
 using namespace std;
 
 void showCentered(WINDOW*,int,const string&);
-void screenLoading(WINDOW*);
+void screenLoading(WINDOW*,const string&,int);
+void menuLoading(WINDOW*,const string&,int);
 void header(WINDOW*);
 
 void setup_color(); //for setup
@@ -46,32 +47,68 @@ void showCentered(WINDOW* win, int y, const string& text) {
     }
     
 
-void screenLoading(WINDOW* win){
+void screenLoading(WINDOW* win,const string& text ,int duration){
         int i;
         string load=" ";
 
-        showCentered(win,10,"Loading...");
+        werase(win);
+        box(win,0,0);
+        wattron(win,A_BOLD);
+        showCentered(win,10,text);
         wattron(win,COLOR_PAIR(9));
         for (i=0;i<21;i++){
             mvwprintw(win,12,29,load.c_str());
-            usleep(80000);
+            usleep(duration*50000);
             wrefresh(win);
             load+=" ";
         }
-        wattroff(win,COLOR_PAIR(9));
+        wattroff(win,COLOR_PAIR(9) | A_BOLD);
         werase(win);
         box(win,0,0);
+        wrefresh(win);
+    }
+
+void menuLoading(WINDOW* win,const string& text ,int duration){
+        int i;
+        string load=" ";
+
+        werase(win);
+        box(win,0,0);
+        wattron(win,A_BOLD);
+        showCentered(win,10,text+" Loading...");
+        wattron(win,COLOR_PAIR(9));
+        for (i=0;i<21;i++){
+            mvwprintw(win,12,29,load.c_str());
+            usleep(duration*50000);
+            wrefresh(win);
+            load+=" ";
+        }
+        wattroff(win,COLOR_PAIR(9) | A_BOLD);
+        werase(win);
+        box(win,0,0);
+        wrefresh(win);
     }
 
 
-void header(WINDOW* win,const string& text){
+void header(WINDOW* win,const string& uname,const string& menu){
     int i;
     wattron(win,A_BOLD);
     showCentered(win,1,"-- WeEGCO Menu System --");
     wattron(win,COLOR_PAIR(5));
-    showCentered(win,2,"Welcome Student : "+text);
-    wattroff(win,COLOR_PAIR(5) | A_BOLD);
-    mvwhline(win,4, 1, '-', 78);
+    showCentered(win,2,"Welcome Student : "+uname+ "     ID : 6700000");
+    wattroff(win,COLOR_PAIR(5));
+    showCentered(win,3,"* "+menu+" *");
+    wattroff(win, A_BOLD);
+    mvwhline(win, 4, 1, ACS_HLINE, 78);
+    wrefresh(win);
+}
+
+void clearbody(WINDOW* win){
+    int i;
+    for (i=5;i<24;i++)
+        mvwprintw(win,i,0,"\n");
+    wrefresh(win);
+    box(win,0,0);
 }
 
 
@@ -85,6 +122,7 @@ void setup_color(){
     init_pair(6, COLOR_WHITE, -1);   // Highlighted text (menu selection)
     //Background
     init_pair(9, -1, COLOR_GREEN);   // Highlighted
+    init_pair(10, -1, COLOR_BLACK);
 }
 
 #endif

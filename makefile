@@ -5,6 +5,6 @@ mouseTEST: mouseTEST.cpp
 run: main.cpp
 	./a.out
 test: UItest.cpp
-	g++ UItest.cpp -lncurses
+	gcc Timetable.h -lncurses
 prac: UIprac
 	g++ UIprac/UIprac5.cpp -lncurses
