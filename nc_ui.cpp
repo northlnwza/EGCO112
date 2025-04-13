@@ -4,14 +4,17 @@
 #include "UserList.h"
 #include "User.h"
 #include "passdata.h"
+#include "menu.h"
 
 using namespace std;
 
+/*
 void showCentered(WINDOW* win, int y, const std::string& text)
 {
     int x = (getmaxx(win) - text.length()) / 2;
     mvwprintw(win, y, x, "%s", text.c_str());
 }
+*/ //Aready have in menu.h
 
 void loginScreen() {
     initscr();
@@ -53,8 +56,9 @@ void loginScreen() {
             wgetnstr(win, pass, 30);
             if (Auth::login(uname, pass)) 
             {
-                showCentered(win, 5, "Login Successful!");
+                //showCentered(win, 5, "Login Successful!");
                // testpass(uname);
+                menu(uname);
                 wrefresh(win);
                 wgetch(win);
             } else {
