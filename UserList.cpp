@@ -1,37 +1,29 @@
-#include <iostream>
 #include "UserList.h"
 #include <fstream>
 #include <sstream>
-
-User::User(std::string uname, std::string pwd, int id)
-    : username(uname), password(pwd), studentID(id), balance(0.0), next(nullptr) {} 
-
+#include <iostream>
 
 UserList::UserList() : head(nullptr), currentID(1000) {}
 
 UserList::~UserList() {
     User* curr = head;
     while (curr) {
-        User* tmp = curr;
+        User* temp = curr;
         curr = curr->next;
-        delete tmp;
+        delete temp;
     }
 }
 
-void UserList::insertUser(const std::string& username, const std::string& password) {
-    User* newUser = new User(username, password, currentID++);
+void UserList::insertUser(const std::string& username, const std::string& password, Role role) {
+    User* newUser;
+    if (role == STUDENT)
+        newUser = new Student(username, password, currentID);
+    else
+        newUser = new Staff(username, password, currentID);
+
     newUser->next = head;
     head = newUser;
-}
-
-bool UserList::verifyUser(const std::string& username, const std::string& password) {
-    User* curr = head;
-    while (curr) {
-        if (curr->username == username && curr->password == password)
-            return true;
-        curr = curr->next;
-    }
-    return false;
+    currentID++;
 }
 
 bool UserList::exists(const std::string& username) {
@@ -44,111 +36,35 @@ bool UserList::exists(const std::string& username) {
     return false;
 }
 
-std::string UserList::getPassword(const std::string& username) {
+bool UserList::verifyUser(const std::string& username, const std::string& password) {
+    User* curr = head;
+    while (curr) {
+        if (curr->username == username && curr->password == password)
+            return true;
+        curr = curr->next;
+    }
+    return false;
+}
+
+User* UserList::getUser(const std::string& username) {
     User* curr = head;
     while (curr) {
         if (curr->username == username)
-            return curr->password;
-        curr = curr->next;
-    }
-    return "Not found";
-}
-
-void UserList::loadFromFile(const std::string& filename) {
-    // เคลียร์ลิงก์ลิสต์เก่าก่อน
-    User* curr = head;
-    while (curr) {
-        User* temp = curr;
-        curr = curr->next;
-        delete temp;
-    }
-    head = nullptr;
-
-    std::ifstream file(filename);
-    std::string line;
-    while (getline(file, line)) {
-        std::stringstream ss(line);
-        std::string uname, pwd;
-        int id;
-        float balance;
-        ss >> uname >> pwd >> id >> balance;
-
-        User* newUser = new User(uname, pwd, id);
-        newUser->balance = balance;
-
-        newUser->next = head; // <<< แทรกที่หัวเหมือน insertUser
-        head = newUser;
-
-        if (id >= currentID) currentID = id + 1;
-    }
-    file.close();
-}
-
-
-void UserList::saveToFile(const std::string& filename) {
-    std::ofstream file(filename);
-    User* curr = head;
-    while (curr) {
-        file << curr->username << " " << curr->password << " " << curr->studentID << " " << curr->balance << std::endl;
-        curr = curr->next;
-    }
-    file.close();
-}
-
-
-
-User* UserList::findByID(int id) {
-    User* curr = head;
-    while (curr) {
-        if (curr->studentID == id) return curr;
+            return curr;
         curr = curr->next;
     }
     return nullptr;
 }
 
-void UserList::deposit(int id, float amount) {
-    User* user = findByID(id);
-    if (user) {
-        user->balance += amount;
-        std::cout << "Deposit successful! Your balance: " << user->balance << "\n";
-    } else {
-        std::cout << "User not found.\n";
+User* UserList::findByID(int id) {
+    User* curr = head;
+    while (curr) {
+        if (curr->studentID == id)
+            return curr;
+        curr = curr->next;
     }
+    return nullptr;
 }
-
-bool UserList::withdraw(int id, float amount) {
-    User* user = findByID(id);
-    if (user && user->balance >= amount) {
-        user->balance -= amount;
-        std::cout << "Withdraw successful! Your balance: " << user->balance << "\n";
-        return true;
-    } else {
-        std::cout << "Not enough money or user not found.\n";
-        return false;
-    }
-}
-
-bool UserList::transfer(int fromID, int toID, float amount) {
-    User* fromUser = findByID(fromID);
-    User* toUser = findByID(toID);
-
-    if (!fromUser || !toUser) {
-        std::cout << "Sender or receiver not found.\n";
-        return false;
-    }
-
-    if (fromUser->balance < amount) {
-        std::cout << "Not enough money to transfer.\n";
-        return false;
-    }
-
-    fromUser->balance -= amount;
-    toUser->balance += amount;
-
-    std::cout << "Transfer successful from ID " << fromID << " to ID " << toID << "\n";
-    return true;
-}
-
 
 int UserList::getID(const std::string& username) {
     User* curr = head;
@@ -158,4 +74,69 @@ int UserList::getID(const std::string& username) {
         curr = curr->next;
     }
     return -1;
+}
+
+void UserList::deposit(int id, float amount) {
+    User* user = findByID(id);
+    if (user) {
+        user->balance += amount;
+        std::cout << "Deposit successful. Balance: " << user->balance << "\n";
+    }
+}
+
+bool UserList::withdraw(int id, float amount) {
+    User* user = findByID(id);
+    if (user && user->balance >= amount) {
+        user->balance -= amount;
+        std::cout << "Withdraw successful. Balance: " << user->balance << "\n";
+        return true;
+    }
+    return false;
+}
+
+bool UserList::transfer(int fromID, int toID, float amount) {
+    User* from = findByID(fromID);
+    User* to = findByID(toID);
+    if (from && to && from->balance >= amount) {
+        from->balance -= amount;
+        to->balance += amount;
+        std::cout << "Transfer successful.\n";
+        return true;
+    }
+    std::cout << "Transfer failed.\n";
+    return false;
+}
+
+void UserList::saveToFile(const std::string& filename) {
+    std::ofstream file(filename);
+    User* curr = head;
+    while (curr) {
+        file << curr->username << " " << curr->password << " " << curr->studentID
+             << " " << curr->balance << " " << curr->role << "\n";
+        curr = curr->next;
+    }
+    file.close();
+}
+
+void UserList::loadFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string uname, pwd;
+    int id, roleInt;
+    float balance;
+
+    while (file >> uname >> pwd >> id >> balance >> roleInt) {
+        Role role = static_cast<Role>(roleInt);
+        User* user;
+        if (role == STUDENT)
+            user = new Student(uname, pwd, id);
+        else
+            user = new Staff(uname, pwd, id);
+
+        user->balance = balance;
+        user->next = head;
+        head = user;
+
+        if (id >= currentID) currentID = id + 1;
+    }
+    file.close();
 }
