@@ -4,20 +4,17 @@
 
 bool Auth::login(const std::string& username, const std::string& password) {
     UserList list;
-    bool    status;
-    list.loadFromFile("users.txt");
-    status = list.verifyUser(username, password);
-    /*
-    if (status)
-        testpass(list, username);
-    */
-    return status;
+
+    return list.verifyUser(username, password);
 }
 
 bool Auth::registerUser(const std::string& username, const std::string& password) {
     UserList list;
     list.loadFromFile("users.txt");
-    if (list.exists(username)) return false;
+    if (list.exists(username))
+        return false;
+    if (username.empty() || password.empty())
+        return false;
     list.insertUser(username, password);
     list.saveToFile("users.txt");
     return true;
