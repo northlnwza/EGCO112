@@ -139,7 +139,7 @@ void bottom(WINDOW* win,const string& text){
 
 void clearbody(WINDOW* win){
     int i;
-    for (i=5;i<25;i++)
+    for (i=5;i<20;i++)
         mvwprintw(win,i,0,"\n");
     wrefresh(win);
     box(win,0,0);

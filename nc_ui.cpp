@@ -91,9 +91,9 @@ void loginScreen() {
             if (choice == 1) { // Login
 
                 inputPopup(win);
-                wmove(win, 10, 32);
+                mvwprintw(win, 10, 24, "Username: ");
                 wgetnstr(win, uname, 30);
-                wmove(win, 12, 32);
+                mvwprintw(win, 12, 24, "Password: ");
                 wgetnstr(win, pass, 30);
 
                 curs_set(0);             
@@ -187,7 +187,4 @@ void inputPopup(WINDOW* win){
     mvwvline(win, boxTop + 1, boxLeft, ACS_VLINE, boxHeight - 1);
     mvwvline(win, boxTop + 1, boxLeft + boxWidth, ACS_VLINE, boxHeight - 1);
 
-    // Labels and inputs inside the box
-    mvwprintw(win, boxTop + 2, boxLeft + 2, "Username: ");
-    mvwprintw(win, boxTop + 4, boxLeft + 2, "Password: ");
 }

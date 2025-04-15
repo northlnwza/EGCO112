@@ -14,7 +14,7 @@ void Timetable(WINDOW*, User *& u);
 void menu(const string & username){
 
     User    *u;
-
+    
     u = Auth::getData(username);
     initscr();                    // Start ncurses
     cbreak();                     // Line buffering disabled
