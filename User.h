@@ -2,22 +2,26 @@
 #define USER_H
 
 #include <string>
+//#include "UserList.h"
+using namespace std;
+
+class UserList;
 
 enum Role { STUDENT, STAFF };
 
 class User {
 public:
-    std::string username;
-    std::string password;
+    string username;
+    string password;
     int studentID;
     float balance;
     Role role;
     User* next;
 
-    User(std::string uname, std::string pwd, int id, Role r);
+    User (string uname,string pwd, int id, Role r);
     virtual ~User() {}
 
-    virtual void showMenu() = 0;
+    virtual void showMenu(UserList& userList) = 0;
     virtual void shop() = 0;
 };
 

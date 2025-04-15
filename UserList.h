@@ -15,6 +15,8 @@ public:
     UserList();
     ~UserList();
 
+    //virtual void showMenu(UserList& userList) = 0;
+
     void insertUser(const std::string& username, const std::string& password, Role role);
     User* findByID(int id);
     int getID(const std::string& username);
