@@ -7,6 +7,8 @@
 
 #include <ncurses.h>
 #include <string>
+#include <termios.h>
+#include <unistd.h>
 using namespace std;
 
 void Timetable(WINDOW*);
@@ -41,7 +43,7 @@ void menu(){
         if (choice=='m'){
         werase(win);
         box(win,0,0);
-        screenLoading(win,"Starting...",1.5);
+        menuLoading(win,"MENU",1.5);
         header(win,"Ten","MENU");
         wattron(win,A_BOLD);
         mvwprintw(win,6,3,"[1]  Classroom Time Table");
@@ -72,8 +74,6 @@ void menu(){
 }
 
 void Timetable(WINDOW* win){
-    werase(win);
-    box(win, 0, 0);
     menuLoading(win,"Timetable",1);
     header(win,"Ten","TIMETABLE");
     clearbody(win);
@@ -82,6 +82,7 @@ void Timetable(WINDOW* win){
     drawTimetable(win);
     wrefresh(win);
 }
+
 
 
 
