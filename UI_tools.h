@@ -49,6 +49,21 @@ void showCentered(WINDOW* win, int y, const string& text) {
         int x = (getmaxx(win) - text.length()) / 2;
         mvwprintw(win, y, x, "%s", text.c_str());
     }
+
+    void showSpinner(WINDOW* win, const char* message, int y, int x, int duration_ms) {
+        const char spinner[] = {'|', '/', '-', '\\'};
+        int spinnerLen = sizeof(spinner);
+        int delay = 100; // ms per frame
+        int cycles = duration_ms / delay;
+    
+        wattron(win,A_BOLD);
+        for (int i = 0; i < cycles; ++i) {
+            mvwprintw(win, y, x, "%c %s %c", spinner[i % spinnerLen], message, spinner[i % spinnerLen]);
+            wrefresh(win);
+            napms(delay);
+        }
+        wattroff(win,A_BOLD);
+    }
     
 
 void screenLoading(WINDOW* win,const string& text ,int duration){
@@ -87,6 +102,7 @@ void screenChecking(WINDOW* win,const string& text ,int duration){
             wrefresh(win);
             load+=" ";
         }
+        sleep(1);
         wattroff(win,COLOR_PAIR(10) | A_BOLD | COLOR_PAIR(4));
         werase(win);
         box(win,0,0);
@@ -123,7 +139,7 @@ void bottom(WINDOW* win,const string& text){
 
 void clearbody(WINDOW* win){
     int i;
-    for (i=5;i<15;i++)
+    for (i=5;i<25;i++)
         mvwprintw(win,i,0,"\n");
     wrefresh(win);
     box(win,0,0);

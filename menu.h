@@ -43,7 +43,7 @@ void menu(const string & username){
         wattron(win,A_BOLD);
         mvwprintw(win,6,3,"[1]  Classroom Time Table");
         mvwprintw(win,8,3,"[2]  Add / Withdraw Courses");
-        mvwprintw(win,10,3,"[3]  Grade");
+        mvwprintw(win,10,3,"[3]  GPA");
         mvwprintw(win,12,3,"[4]  Weather");
         wattron(win,COLOR_PAIR(2));
         mvwprintw(win,20,3,"[9]  Log out");
@@ -62,8 +62,7 @@ void menu(const string & username){
         }
     }while (choice != '9');
 
-    delwin(win);
-    endwin();
+    screenLoading(win,"Logging out...",2);
     delete u;
 }
 

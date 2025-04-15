@@ -10,6 +10,7 @@ using namespace std;
 #include "UI_tools.h"
 
 void auth_header(WINDOW*);
+void inputPopup(WINDOW*);
 
 void loginScreen() {
     initscr();
@@ -47,6 +48,7 @@ void loginScreen() {
     int input;
 
     while (true) {
+        noecho();
         // Draw the menu
         auth_header(win);
         bottom(win,"-");
@@ -54,7 +56,12 @@ void loginScreen() {
         wattron(win, A_BOLD);
         for (int i = 0; i < numItems; ++i) {
             if (i == highlight) wattron(win, A_REVERSE);
-            mvwprintw(win, 6 + i * 2, 3, "[%d]  %s ", i + 1, menuItems[i]);
+            if (i != numItems-1) mvwprintw(win, 6 + i * 2, 3, "[%d]  %s ", i + 1, menuItems[i]);
+                else {
+                    wattron(win,COLOR_PAIR(2));
+                    mvwprintw(win, 18, 3, "[%d]  %s ", i + 1, menuItems[i]);
+                    wattroff(win,COLOR_PAIR(2));
+                }
             if (i == highlight) wattroff(win, A_REVERSE);
         }
         wattroff(win, A_BOLD);
@@ -63,9 +70,12 @@ void loginScreen() {
 
         input = wgetch(win);
 
-        if (input == KEY_UP) {
+        if (input == ERR) { // No input
+            napms(500); 
+            continue;
+        }else if (input == KEY_UP) {
             highlight = (highlight - 1 + numItems) % numItems;
-        } else if (input == KEY_DOWN) {
+        }else if (input == KEY_DOWN) {
             highlight = (highlight + 1) % numItems;
         } 
         else if (input == '1') highlight = 0;
@@ -75,22 +85,25 @@ void loginScreen() {
 
         else if (input == 10) { // Enter key
             choice = highlight + 1;
+            echo();
             curs_set(1);
             
             if (choice == 1) { // Login
-                auth_header(win);
-                mvwprintw(win, 6, 3, "Username: ");
-                wrefresh(win);
+
+                inputPopup(win);
+                wmove(win, 10, 32);
                 wgetnstr(win, uname, 30);
-                mvwprintw(win, 7, 3, "Password: ");
-                wrefresh(win);
+                wmove(win, 12, 32);
                 wgetnstr(win, pass, 30);
+
                 curs_set(0);             
                 screenChecking(win,"Authenticating...",1);      
                 if (Auth::login(uname, pass)) {
+                    wattron(win,COLOR_PAIR(3));
+                    showSpinner(win,"Login Successful",11,30,1000);
+                    wattroff(win,COLOR_PAIR(3));
                     menu(uname);
                     wrefresh(win);
-                    wgetch(win);
                 } else {
                     wattron(win,A_BOLD | COLOR_PAIR(2));
                     bottom(win,"- Login Failed!");
@@ -131,6 +144,8 @@ void loginScreen() {
                 wrefresh(win);
                 wgetch(win);
             } else if (choice == 4) {
+                noecho();
+                curs_set(0);
                 break;
             }
         }
@@ -147,4 +162,32 @@ void auth_header(WINDOW* win){
     wattroff(win, A_BOLD | COLOR_PAIR(2));
     mvwhline(win, 4, 1, ACS_HLINE, 78);
     wrefresh(win);
+}
+
+void inputPopup(WINDOW* win){
+    auth_header(win);
+    clearbody(win);
+    int boxTop = 8;
+    int boxLeft = 20;
+    int boxWidth = 40;
+    int boxHeight = 6;
+
+    // Draw the box using ACS characters
+    // Corners
+    mvwaddch(win, boxTop, boxLeft, ACS_ULCORNER);
+    mvwaddch(win, boxTop, boxLeft + boxWidth, ACS_URCORNER);
+    mvwaddch(win, boxTop + boxHeight, boxLeft, ACS_LLCORNER);
+    mvwaddch(win, boxTop + boxHeight, boxLeft + boxWidth, ACS_LRCORNER);
+
+    // Top and Bottom borders
+    mvwhline(win, boxTop, boxLeft + 1, ACS_HLINE, boxWidth - 1);
+    mvwhline(win, boxTop + boxHeight, boxLeft + 1, ACS_HLINE, boxWidth - 1);
+
+    // Left and Right borders
+    mvwvline(win, boxTop + 1, boxLeft, ACS_VLINE, boxHeight - 1);
+    mvwvline(win, boxTop + 1, boxLeft + boxWidth, ACS_VLINE, boxHeight - 1);
+
+    // Labels and inputs inside the box
+    mvwprintw(win, boxTop + 2, boxLeft + 2, "Username: ");
+    mvwprintw(win, boxTop + 4, boxLeft + 2, "Password: ");
 }
