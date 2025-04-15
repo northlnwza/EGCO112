@@ -26,13 +26,6 @@ void menu(const string & username){
     start_color();
     use_default_colors();
 
-    if (!has_colors()) {
-        endwin();
-        printf("Your terminal doesn't support color!\n");
-        exit(0);
-    }
-    else setup_color();
-
     int win_height = 24, win_width = 80;
     int starty = (LINES - win_height) / 2; 
     int startx = (COLS - win_width) / 2;
@@ -45,8 +38,7 @@ void menu(const string & username){
         if (choice=='m'){
         werase(win);
         box(win,0,0);
-        screenLoading(win,"Starting...",1.5);
-        //header(win,"Ten","MENU");
+        screenLoading(win,"Home Loading...",1.5);
         header(win,u,"MENU");
         wattron(win,A_BOLD);
         mvwprintw(win,6,3,"[1]  Classroom Time Table");
@@ -70,7 +62,6 @@ void menu(const string & username){
         }
     }while (choice != '9');
 
-    screenLoading(win,"Closing...",2);
     delwin(win);
     endwin();
     delete u;
@@ -79,7 +70,7 @@ void menu(const string & username){
 void Timetable(WINDOW* win, User *& u){
     werase(win);
     box(win, 0, 0);
-    menuLoading(win,"Timetable",1);
+    screenLoading(win,"Timetable Loading...",1);
     //header(win,"Ten","TIMETABLE");
     header(win,u,"TIMETABLE");
     clearbody(win);

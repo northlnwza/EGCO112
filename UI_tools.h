@@ -11,12 +11,14 @@ using namespace std;
 
 void showCentered(WINDOW*,int,const string&);
 void screenLoading(WINDOW*,const string&,int);
-void menuLoading(WINDOW*,const string&,int);
+void screenChecking(WINDOW*,const string&,int);
 void header(WINDOW*, User *& u);
+void bottom(WINDOW*,const string&);
+void clearbody(WINDOW*);
 
 void setup_color(); //for setup
 
-class Button{
+class Button{ //for mouse
     
     private:
         WINDOW* win;
@@ -70,22 +72,22 @@ void screenLoading(WINDOW* win,const string& text ,int duration){
         wrefresh(win);
     }
 
-void menuLoading(WINDOW* win,const string& text ,int duration){
+void screenChecking(WINDOW* win,const string& text ,int duration){
         int i;
         string load=" ";
 
         werase(win);
         box(win,0,0);
-        wattron(win,A_BOLD);
-        showCentered(win,10,text+" Loading...");
-        wattron(win,COLOR_PAIR(9));
+        wattron(win,A_BOLD | COLOR_PAIR(4));
+        showCentered(win,10,text);
+        wattron(win,COLOR_PAIR(10));
         for (i=0;i<21;i++){
             mvwprintw(win,12,29,load.c_str());
             usleep(duration*50000);
             wrefresh(win);
             load+=" ";
         }
-        wattroff(win,COLOR_PAIR(9) | A_BOLD);
+        wattroff(win,COLOR_PAIR(10) | A_BOLD | COLOR_PAIR(4));
         werase(win);
         box(win,0,0);
         wrefresh(win);
@@ -94,14 +96,11 @@ void menuLoading(WINDOW* win,const string& text ,int duration){
 
 void header(WINDOW* win,User* & u,const string& menu){
     //User    *u;
-    int i;
-
     //u = Auth::getData(uname);
     wattron(win,A_BOLD);
     showCentered(win,1,"-- WeEGCO Menu System --");
     wattron(win,COLOR_PAIR(5));
     showCentered(win,2,"Welcome Student : "+u->username+ "     ID : "+to_string(u->id));
-    //showCentered(win,2,"Welcome Student : "+uname+ "     ID : 6700000");
     wattroff(win,COLOR_PAIR(5));
     showCentered(win,3,"* "+menu+" *");
     wattroff(win, A_BOLD);
@@ -110,9 +109,21 @@ void header(WINDOW* win,User* & u,const string& menu){
     //delete u;
 }
 
+void bottom(WINDOW* win,const string& text){
+    mvwhline(win,20,1,ACS_HLINE, 78);
+    //mvwhline(win,20,0,ACS_LTEE,1);
+    //mvwhline(win,20,79,ACS_RTEE,1);
+    mvwhline(win,22,1,ACS_HLINE, 78);
+    //mvwhline(win,22,0,ACS_LTEE,1);   
+    //mvwhline(win,22,79,ACS_RTEE,1);
+
+    mvwprintw(win,21,3,text.c_str());
+    wrefresh(win);
+}
+
 void clearbody(WINDOW* win){
     int i;
-    for (i=5;i<24;i++)
+    for (i=5;i<15;i++)
         mvwprintw(win,i,0,"\n");
     wrefresh(win);
     box(win,0,0);
@@ -129,7 +140,8 @@ void setup_color(){
     init_pair(6, COLOR_WHITE, -1);   // Highlighted text (menu selection)
     //Background
     init_pair(9, -1, COLOR_GREEN);   // Highlighted
-    init_pair(10, -1, COLOR_BLACK);
+    init_pair(10, -1,COLOR_YELLOW);
+    init_pair(11, -1,COLOR_BLACK);
 }
 
 #endif
