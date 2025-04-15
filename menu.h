@@ -33,34 +33,64 @@ void menu(const string & username){
     WINDOW* win = newwin(win_height, win_width, starty, startx);
     box(win, 0, 0); // Draw border
 
-    char choice='m';
-    do {
-        if (choice=='m'){
+    const char* menuItems[] = {
+        "Classroom Time Table",
+        "Add / Withdraw Courses",
+        "GPA",
+        "Weather",
+        "Log Out"
+    };
+    int numItems = sizeof(menuItems) / sizeof(menuItems[0]);
+    int highlight = 0; // current selected item
+    int input;
+    bool running = true;
+    
+    while (running) {
         werase(win);
-        box(win,0,0);
-        screenLoading(win,"Home Loading...",1.5);
-        header(win,u,"MENU");
-        wattron(win,A_BOLD);
-        mvwprintw(win,6,3,"[1]  Classroom Time Table");
-        mvwprintw(win,8,3,"[2]  Add / Withdraw Courses");
-        mvwprintw(win,10,3,"[3]  GPA");
-        mvwprintw(win,12,3,"[4]  Weather");
-        wattron(win,COLOR_PAIR(2));
-        mvwprintw(win,20,3,"[9]  Log out");
-        wattroff(win,A_BOLD | COLOR_PAIR(2));
+        box(win, 0, 0);
+        screenLoading(win, "Home Loading...", 1.5);
+        header(win, u, "MENU");
+    
+        // Print menu items with highlight
+        for (int i = 0; i < numItems; ++i) {
+            int y = 6 + i * 2;
+            if (i == highlight) wattron(win, A_REVERSE | A_BOLD);
+                else wattron(win, A_BOLD);
+            mvwprintw(win, y, 4, "[%d]  %s", i + 1, menuItems[i]);
+            wattroff(win, A_REVERSE | A_BOLD);
+        }
         wrefresh(win);
+    
+        input = wgetch(win);
+    
+        // Navigation
+        if (input == ERR) { // No input
+            napms(500); 
+            continue;
+        } else if (input == KEY_UP) {
+            highlight = (highlight - 1 + numItems) % numItems;
+        } else if (input == KEY_DOWN) {
+            highlight = (highlight + 1) % numItems;
+        } else if (input == 10) { // Enter
+            switch (highlight) {
+                case 0:
+                    Timetable(win, u);
+                    break;
+                case 1:
+                    // Add / Withdraw function
+                    break;
+                case 2:
+                    // GPA function
+                    break;
+                case 3:
+                    // Weather function
+                    break;
+                case 4:
+                    running = false; // Log out
+                    break;
+            }
         }
-
-        choice = wgetch(win);
-
-        switch (choice){
-            case 'm':
-                break;
-            case '1':
-                Timetable(win, u);
-                break;
-        }
-    }while (choice != '9');
+    }
 
     screenLoading(win,"Logging out...",2);
     delete u;
@@ -70,7 +100,6 @@ void Timetable(WINDOW* win, User *& u){
     werase(win);
     box(win, 0, 0);
     screenLoading(win,"Timetable Loading...",1);
-    //header(win,"Ten","TIMETABLE");
     header(win,u,"TIMETABLE");
     clearbody(win);
     initTimetable();

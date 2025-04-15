@@ -10,6 +10,7 @@
 using namespace std;
 
 void showCentered(WINDOW*,int,const string&);
+void showCentered(WINDOW*,int,const string&,int);
 void screenLoading(WINDOW*,const string&,int);
 void screenChecking(WINDOW*,const string&,int);
 void header(WINDOW*, User *& u);
@@ -45,9 +46,15 @@ class Button{ //for mouse
     };
 
 
-void showCentered(WINDOW* win, int y, const string& text) {
+    void showCentered(WINDOW* win, int y, const string& text) {
         int x = (getmaxx(win) - text.length()) / 2;
         mvwprintw(win, y, x, "%s", text.c_str());
+    }
+    void showCentered(WINDOW* win, int y, const string& text,int color) {
+        int x = (getmaxx(win) - text.length()) / 2;
+        wattron(win,A_BOLD | COLOR_PAIR(color));
+        mvwprintw(win, y, x, "%s", text.c_str());
+        wattroff(win,A_BOLD | COLOR_PAIR(color));
     }
 
     void showSpinner(WINDOW* win, const char* message, int y, int x, int duration_ms) {
@@ -115,9 +122,9 @@ void header(WINDOW* win,User* & u,const string& menu){
     //u = Auth::getData(uname);
     wattron(win,A_BOLD);
     showCentered(win,1,"-- WeEGCO Menu System --");
-    wattron(win,COLOR_PAIR(5));
+    wattron(win,COLOR_PAIR(4));
     showCentered(win,2,"Welcome Student : "+u->username+ "     ID : "+to_string(u->id));
-    wattroff(win,COLOR_PAIR(5));
+    wattroff(win,COLOR_PAIR(4));
     showCentered(win,3,"* "+menu+" *");
     wattroff(win, A_BOLD);
     mvwhline(win, 4, 1, ACS_HLINE, 78);
@@ -148,12 +155,13 @@ void clearbody(WINDOW* win){
 
 void setup_color(){
     //Font
-    init_pair(1, COLOR_BLACK, -1);   // Default tex
-    init_pair(2, COLOR_RED, -1);     // Errors
+    init_pair(1, COLOR_RED, -1); // Errors
+    init_pair(2, COLOR_YELLOW, -1); // Warnings   
     init_pair(3, COLOR_GREEN, -1);   // Success / active
-    init_pair(4, COLOR_YELLOW, -1);  // Warnings
-    init_pair(5, COLOR_CYAN, -1);    // Prompts or info
-    init_pair(6, COLOR_WHITE, -1);   // Highlighted text (menu selection)
+    init_pair(4, COLOR_CYAN, -1);    // Prompts or info
+    init_pair(5, COLOR_BLUE, -1);
+    init_pair(6, COLOR_MAGENTA, -1);
+    init_pair(7, COLOR_WHITE, -1);   // Highlighted text (menu selection)
     //Background
     init_pair(9, -1, COLOR_GREEN);   // Highlighted
     init_pair(10, -1,COLOR_YELLOW);

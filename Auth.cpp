@@ -4,7 +4,7 @@
 
 bool Auth::login(const std::string& username, const std::string& password) {
     UserList list;
-
+    list.loadFromFile("users.txt");
     return list.verifyUser(username, password);
 }
 

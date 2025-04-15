@@ -11,6 +11,7 @@ using namespace std;
 
 void auth_header(WINDOW*);
 void inputPopup(WINDOW*);
+void Interface(WINDOW*);
 
 void loginScreen() {
     initscr();
@@ -32,6 +33,7 @@ void loginScreen() {
 
     WINDOW* win = newwin(height, width, starty, startx);
     keypad(win, TRUE);
+    nodelay(win, TRUE);
     screenLoading(win, "Starting...", 2);
 
     char uname[30], pass[30];
@@ -58,9 +60,9 @@ void loginScreen() {
             if (i == highlight) wattron(win, A_REVERSE);
             if (i != numItems-1) mvwprintw(win, 6 + i * 2, 3, "[%d]  %s ", i + 1, menuItems[i]);
                 else {
-                    wattron(win,COLOR_PAIR(2));
+                    wattron(win,COLOR_PAIR(1));
                     mvwprintw(win, 18, 3, "[%d]  %s ", i + 1, menuItems[i]);
-                    wattroff(win,COLOR_PAIR(2));
+                    wattroff(win,COLOR_PAIR(1));
                 }
             if (i == highlight) wattroff(win, A_REVERSE);
         }
@@ -71,7 +73,15 @@ void loginScreen() {
         input = wgetch(win);
 
         if (input == ERR) { // No input
-            napms(500); 
+            static int j=2,move=1;
+            wattron(win,COLOR_PAIR(5) | A_BOLD);
+            mvwprintw(win,2,j," -- Welcome to WeEGCO AUTH SYSTEM -- ");
+            wattroff(win,COLOR_PAIR(5) | A_BOLD);
+            if (j>40) move=0;
+            else if (move==0 && j==2) move=1;
+            if (move==1) j++;
+            else j--;
+            napms(200);
             continue;
         }else if (input == KEY_UP) {
             highlight = (highlight - 1 + numItems) % numItems;
@@ -86,6 +96,7 @@ void loginScreen() {
         else if (input == 10) { // Enter key
             choice = highlight + 1;
             echo();
+            nodelay(win, FALSE);
             curs_set(1);
             
             if (choice == 1) { // Login
@@ -105,24 +116,27 @@ void loginScreen() {
                     menu(uname);
                     wrefresh(win);
                 } else {
-                    wattron(win,A_BOLD | COLOR_PAIR(2));
-                    bottom(win,"- Login Failed!");
-                    wattroff(win,A_BOLD | COLOR_PAIR(2));
+                    wattron(win, COLOR_PAIR(2));
+                    bottom(win,"- Login Failed!              ");
+                    wattron(win,A_DIM);
+                    mvwprintw(win,21,19,"(Username or Password is incorrect.)");
+                    wattroff(win,A_BOLD | COLOR_PAIR(2) | A_DIM);
                 }
             } else if (choice == 2) { // Register
-                auth_header(win);
+
+                inputPopup(win);
                 char new_uname[30], new_pass[30];
-                mvwprintw(win, 6, 3, "New Username: ");
+                mvwprintw(win, 10, 24, "New Username: ");
                 wgetnstr(win, new_uname, 30);
-                mvwprintw(win, 7, 3, "New Password: ");
+                mvwprintw(win, 12, 24, "New Password: ");
                 wgetnstr(win, new_pass, 30);
                 curs_set(0);
                 screenChecking(win,"Authenticating...",1.5);
                 if (Auth::registerUser(new_uname, new_pass)) {
                     wattron(win,A_BOLD | COLOR_PAIR(3));
-                    bottom(win,"- Registration Successful!");
+                    bottom(win,"- Registration Successful!              ");
                     wattron(win,A_DIM);
-                    mvwprintw(win,21,29,"(Constructor [%s])",new_uname);
+                    mvwprintw(win,21,29,"(Constructor [%s])          ",new_uname);
                     wattroff(win,A_BOLD | COLOR_PAIR(3) | A_DIM);
                 } else {
                     wattron(win,A_BOLD | COLOR_PAIR(2));
@@ -157,11 +171,7 @@ void loginScreen() {
 
 void auth_header(WINDOW* win){
     clearbody(win);
-    wattron(win, A_BOLD | COLOR_PAIR(2));
-    showCentered(win, 2, "-- Welcome to WeEGCO AUTH SYSTEM --");
-    wattroff(win, A_BOLD | COLOR_PAIR(2));
     mvwhline(win, 4, 1, ACS_HLINE, 78);
-    wrefresh(win);
 }
 
 void inputPopup(WINDOW* win){
@@ -186,5 +196,10 @@ void inputPopup(WINDOW* win){
     // Left and Right borders
     mvwvline(win, boxTop + 1, boxLeft, ACS_VLINE, boxHeight - 1);
     mvwvline(win, boxTop + 1, boxLeft + boxWidth, ACS_VLINE, boxHeight - 1);
+
+    bottom(win,"- Input Username and Password                ");
+}
+
+void Interface(WINDOW*){
 
 }
