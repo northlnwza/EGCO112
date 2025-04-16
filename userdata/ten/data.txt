@@ -1,3 +1,0 @@
-Username: ten
-Password: 123
-ID: 1007

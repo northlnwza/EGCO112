@@ -1,3 +1,0 @@
-Username: abc
-Password: def
-ID: 1002

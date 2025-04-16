@@ -1,3 +1,5 @@
 Username: 5
 Password: 5
-ID: 1003
+ID: 1001
+Role: 1
+Balance: 0

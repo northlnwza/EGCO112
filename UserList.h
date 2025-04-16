@@ -14,7 +14,7 @@ public:
     UserList();
     ~UserList();
 
-    void insertUser(const string& username, const string& password);
+    void insertUser(const string& username, const string& password, Role role);
     bool verifyUser(const string& username, const string& password);
     bool exists(const string& username);
     string getPassword(const string& username);
@@ -24,5 +24,5 @@ public:
     int getID(const string& username);
 };
 
-void makedir(const string & username, string & password, int id);
+void makedir(const string & username, string & password, int id, Role role, float balance);
 #endif

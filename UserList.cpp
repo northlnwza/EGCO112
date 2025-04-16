@@ -6,7 +6,9 @@
 
 using namespace std;
 
-User::User(string uname, string pwd, int id):username(uname), password(pwd), id(id), next(nullptr) {}
+User::User(string uname, string pwd, int id, Role r):username(uname), password(pwd), id(id), balance(0.0), role(r), next(nullptr) {}
+Student::Student(string uname, string pwd, int id) : User(uname, pwd, id, STUDENT) {}
+Staff::Staff(string uname, string pwd, int id) : User(uname, pwd, id, STAFF) {}
 
 UserList::UserList():head(nullptr), currentID(1000) {}
 
@@ -19,8 +21,10 @@ UserList::~UserList() {
     }
 }
 
-void UserList::insertUser(const string& username, const string& password) {
-    User* newUser = new User(username, password, currentID++);
+void UserList::insertUser(const string& username, const string& password, Role role) {
+    User* newUser; 
+
+    newUser = new User(username, password, currentID++, role);
     newUser->next = head;
     head = newUser;
 }
@@ -78,14 +82,20 @@ std::string UserList::getPassword(const string& username) {
 void UserList::loadFromFile(const string& filename) {
     ifstream file(filename);
     string line;
-    while (getline(file, line)) {
+    string uname, pwd;
+    Role role;
+    User *newuser;
+    int id, roleInt;
+    float balance;
+    while (getline(file, line)) 
+    {
         stringstream ss(line);
-        string uname, pwd;
-        int id;
-        ss >> uname >> pwd >> id;
-        User* newUser = new User(uname, pwd, id);
-        newUser->next = head;
-        head = newUser;
+
+        ss >> uname >> pwd >> id >> balance >> roleInt;
+        role = static_cast<Role>(roleInt);
+        newuser = new User(uname, pwd, id, role);
+        newuser->next = head;
+        head = newuser;
         if (id >= currentID) currentID = id + 1;
     }
     file.close();
@@ -124,16 +134,14 @@ void UserList::saveToFile(const string& filename) {
     ofstream file(filename);
     User* curr = head;
     while (curr) {
-        file << curr->username << " " << curr->password << " " << curr->id << endl;
-        makedir(curr->username, curr->password, curr->id);
+        file << curr->username << " " << curr->password << " " << curr->id << " " << curr->balance << " " << curr->role << endl;
+        makedir(curr->username, curr->password, curr->id, curr->role, curr->balance);
         curr = curr->next;
     }
     file.close();
 }
 
-
-
-void makedir(const string & username, string & password, int id)
+void makedir(const string & username, string & password, int id, Role role, float balance)
 {
 	string folder = "userdata/" + username;
 	string file = folder + "/data.txt";
@@ -144,5 +152,7 @@ void makedir(const string & username, string & password, int id)
     userFile << "Username: " << username << endl;
     userFile << "Password: " << password << endl;
     userFile << "ID: " << id << endl;
+    userFile << "Role: " << role << endl;
+    userFile << "Balance: " << balance << endl;
     userFile.close();
 }

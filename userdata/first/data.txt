@@ -1,3 +1,0 @@
-Username: first
-Password: 123
-ID: 1006

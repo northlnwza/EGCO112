@@ -54,7 +54,7 @@ void loginScreen() {
             if (Auth::login(uname, pass)) 
             {
                 showCentered(win, 5, "Login Successful!");
-               // testpass(uname);
+                testpass(uname);
                 wrefresh(win);
                 wgetch(win);
             } else {
@@ -65,13 +65,20 @@ void loginScreen() {
         } else if (choice == 2) {
             werase(win); box(win, 0, 0);
             char new_uname[30], new_pass[30];
+            Role role;
+            int roleInput;
             mvwprintw(win, 2, 2, "New Username: ");
             wgetnstr(win, new_uname, 30);
             mvwprintw(win, 3, 2, "New Password: ");
             wgetnstr(win, new_pass, 30);
-            if (Auth::registerUser(new_uname, new_pass)) {
+            mvwprintw(win, 4, 2, "Role (0 = Student, 1 = Staff): ");
+            wscanw(win, "%d", &roleInput);
+            role = static_cast<Role>(roleInput);
+            if (Auth::registerUser(new_uname, new_pass, role)) 
+            {
                 showCentered(win, 5, "Registration Successful!");
-            } else {
+            } 
+            else {
                 showCentered(win, 5, "Registration Failed!");
             }
             wrefresh(win);

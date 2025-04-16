@@ -1,3 +1,0 @@
-Username: dfdfdf
-Password: 222
-ID: 1000

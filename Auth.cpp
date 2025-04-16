@@ -10,12 +10,15 @@ bool Auth::login(const string& username, const string& password) {
     return list.verifyUser(username, password);
 }
 
-bool Auth::registerUser(const string& username, const string& password) {
+bool Auth::registerUser(const string& username, const string& password, Role role) {
     UserList list;
 
     list.loadFromFile("users.txt");
-    if (list.exists(username)) return false;
-    list.insertUser(username, password);
+    if (list.exists(username)) 
+        return false;
+    if (username.empty() || password.empty()) 
+        return false;
+    list.insertUser(username, password, role);
     list.saveToFile("users.txt");
     return true;
 }
@@ -27,7 +30,12 @@ User* Auth::getData(const string & username) // in case after login
 
     list.loadFromFile("users.txt");
     curr = list.findByID(list.getID(username));
-    return new User(curr->username, curr->password, curr->id);
+    if (curr->role == STUDENT)
+        return new Student(curr->username, curr->password, curr->id);
+    else if (curr->role == STAFF)
+        return new Staff(curr->username, curr->password, curr->id);
+    //return new User(curr->username, curr->password, curr->id);
+    return nullptr;
 }
 
 string Auth::recoverPassword(const string & username) {
