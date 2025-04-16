@@ -25,4 +25,5 @@ public:
 };
 
 void makedir(const string & username, string & password, int id, Role role, float balance);
+const char * roleToString(Role r);
 #endif

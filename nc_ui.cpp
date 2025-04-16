@@ -54,7 +54,7 @@ void loginScreen() {
             if (Auth::login(uname, pass)) 
             {
                 showCentered(win, 5, "Login Successful!");
-                testpass(uname);
+                testpass(uname, win);
                 wrefresh(win);
                 wgetch(win);
             } else {

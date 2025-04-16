@@ -141,6 +141,16 @@ void UserList::saveToFile(const string& filename) {
     file.close();
 }
 
+const char* roleToString(Role r) 
+{
+    switch (r)
+    {
+        case STUDENT: return "STUDENT";
+        case STAFF: return "STAFF";
+        default: return "UNKNOWN";
+    }
+}
+
 void makedir(const string & username, string & password, int id, Role role, float balance)
 {
 	string folder = "userdata/" + username;

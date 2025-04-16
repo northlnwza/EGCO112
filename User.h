@@ -6,6 +6,9 @@
 using namespace std;
 
 enum Role { STUDENT, STAFF };
+
+
+
 class User 
 {
 public:
