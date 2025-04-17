@@ -58,25 +58,28 @@ void loginScreen() {
         wattron(win, A_BOLD);
         for (int i = 0; i < numItems; ++i) {
             if (i == highlight) wattron(win, A_REVERSE);
-            if (i != numItems-1) mvwprintw(win, 6 + i * 2, 3, "[%d]  %s ", i + 1, menuItems[i]);
+            if (i != numItems-1) mvwprintw(win, 6 + i * 2, 4, "[%d]  %s ", i + 1, menuItems[i]);
                 else {
                     wattron(win,COLOR_PAIR(1));
-                    mvwprintw(win, 18, 3, "[%d]  %s ", i + 1, menuItems[i]);
+                    mvwprintw(win, 18, 4, "[%d]  %s ", i + 1, menuItems[i]);
                     wattroff(win,COLOR_PAIR(1));
                 }
             if (i == highlight) wattroff(win, A_REVERSE);
         }
         wattroff(win, A_BOLD);
         //mvwprintw(win, 14, 3, "Use ↑ ↓ arrows and press Enter.");
-        wrefresh(win);
-
+        
         input = wgetch(win);
 
         if (input == ERR) { // No input
-            static int j=2,move=1;
+            static int j=15,move=1;
             wattron(win,COLOR_PAIR(5) | A_BOLD);
+            wmove(win,2,1);
+            wclrtoeol(win);
             mvwprintw(win,2,j," -- Welcome to WeEGCO AUTH SYSTEM -- ");
             wattroff(win,COLOR_PAIR(5) | A_BOLD);
+            box(win,0,0);
+            wrefresh(win);
             if (j>40) move=0;
             else if (move==0 && j==2) move=1;
             if (move==1) j++;
@@ -97,11 +100,13 @@ void loginScreen() {
             choice = highlight + 1;
             echo();
             nodelay(win, FALSE);
+            auth_header(win);
             curs_set(1);
             
             if (choice == 1) { // Login
 
                 inputPopup(win);
+                showCentered(win, 6,"Login System.",3,1);
                 mvwprintw(win, 10, 24, "Username: ");
                 wgetnstr(win, uname, 30);
                 mvwprintw(win, 12, 24, "Password: ");
@@ -117,7 +122,7 @@ void loginScreen() {
                     wrefresh(win);
                 } else {
                     wattron(win, COLOR_PAIR(2));
-                    bottom(win,"- Login Failed!              ");
+                    bottom(win,"- Login Failed!");
                     wattron(win,A_DIM);
                     mvwprintw(win,21,19,"(Username or Password is incorrect.)");
                     wattroff(win,A_BOLD | COLOR_PAIR(2) | A_DIM);
@@ -134,9 +139,9 @@ void loginScreen() {
                 screenChecking(win,"Authenticating...",1.5);
                 if (Auth::registerUser(new_uname, new_pass)) {
                     wattron(win,A_BOLD | COLOR_PAIR(3));
-                    bottom(win,"- Registration Successful!              ");
+                    bottom(win,"- Registration Successful!");
                     wattron(win,A_DIM);
-                    mvwprintw(win,21,29,"(Constructor [%s])          ",new_uname);
+                    mvwprintw(win,21,29,"(Constructor [%s])",new_uname);
                     wattroff(win,A_BOLD | COLOR_PAIR(3) | A_DIM);
                 } else {
                     wattron(win,A_BOLD | COLOR_PAIR(2));
@@ -163,6 +168,7 @@ void loginScreen() {
                 break;
             }
         }
+        input=ERR;
     }
     screenLoading(win,"Closing...",2);
     delwin(win);
@@ -171,6 +177,12 @@ void loginScreen() {
 
 void auth_header(WINDOW* win){
     clearbody(win);
+    wmove(win,2,1);
+    wclrtoeol(win);
+    box(win,0,0);
+    wattron(win,COLOR_PAIR(5) | A_BOLD);
+    showCentered(win,2," -- Welcome to WeEGCO AUTH SYSTEM -- ");
+    wattroff(win,COLOR_PAIR(5) | A_BOLD);
     mvwhline(win, 4, 1, ACS_HLINE, 78);
 }
 

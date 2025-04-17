@@ -14,8 +14,8 @@ void Timetable(WINDOW*, User *& u);
 void menu(const string & username){
 
     User    *u;
-    
     u = Auth::getData(username);
+
     initscr();                    // Start ncurses
     cbreak();                     // Line buffering disabled
     noecho();                     // Don't echo input
@@ -32,6 +32,8 @@ void menu(const string & username){
 
     WINDOW* win = newwin(win_height, win_width, starty, startx);
     box(win, 0, 0); // Draw border
+    keypad(win, TRUE);
+    nodelay(win, FALSE);
 
     const char* menuItems[] = {
         "Classroom Time Table",
@@ -45,36 +47,52 @@ void menu(const string & username){
     int input;
     bool running = true;
     
+    screenLoading(win, "Home Loading...", 1.5);
     while (running) {
         werase(win);
         box(win, 0, 0);
-        screenLoading(win, "Home Loading...", 1.5);
         header(win, u, "MENU");
+        //mvwprintw(win, 20, 4, "Input: %d", input);
     
         // Print menu items with highlight
+        
         for (int i = 0; i < numItems; ++i) {
             int y = 6 + i * 2;
-            if (i == highlight) wattron(win, A_REVERSE | A_BOLD);
-                else wattron(win, A_BOLD);
-            mvwprintw(win, y, 4, "[%d]  %s", i + 1, menuItems[i]);
-            wattroff(win, A_REVERSE | A_BOLD);
+            wattron(win,A_BOLD);
+            if (i == highlight) wattron(win, A_REVERSE);
+            if (i != numItems-1) mvwprintw(win, 6 + i * 2, 4, "[%d]  %s ", i + 1, menuItems[i]);
+                else {
+                    wattron(win,COLOR_PAIR(1));
+                    mvwprintw(win, 18, 4, "[%d]  %s ", i + 1, menuItems[i]);
+                    wattroff(win,COLOR_PAIR(1));
+                }
+                wattroff(win, A_REVERSE | A_BOLD);
         }
         wrefresh(win);
     
         input = wgetch(win);
     
         // Navigation
-        if (input == ERR) { // No input
-            napms(500); 
+        /*if (input == ERR) { // No input
+            napms(100); 
             continue;
-        } else if (input == KEY_UP) {
+        }*/
+        if (input == KEY_UP) {
             highlight = (highlight - 1 + numItems) % numItems;
         } else if (input == KEY_DOWN) {
             highlight = (highlight + 1) % numItems;
-        } else if (input == 10) { // Enter
+        } 
+        else if (input == '1') highlight = 0;
+        else if (input == '2') highlight = 1;
+        else if (input == '3') highlight = 2;
+        else if (input == '4') highlight = 3;
+        else if (input == '5') highlight = 4;
+
+        else if (input == 10) { // Enter
             switch (highlight) {
                 case 0:
                     Timetable(win, u);
+                    screenLoading(win, "Home Loading...", 1.5);
                     break;
                 case 1:
                     // Add / Withdraw function
@@ -89,6 +107,7 @@ void menu(const string & username){
                     running = false; // Log out
                     break;
             }
+            input=0;
         }
     }
 
@@ -100,12 +119,20 @@ void Timetable(WINDOW* win, User *& u){
     werase(win);
     box(win, 0, 0);
     screenLoading(win,"Timetable Loading...",1);
-    header(win,u,"TIMETABLE");
+    header(win,u,"MENU >> TIMETABLE");
     clearbody(win);
     initTimetable();
     loadCoursesFromFile("course.txt");
     drawTimetable(win);
     wrefresh(win);
+
+    int ch;
+    while (true) {
+        ch = wgetch(win);
+        if (ch == 'm' || ch == 'M') {
+            break;
+        }
+    }
 }
 
 

@@ -10,12 +10,13 @@
 using namespace std;
 
 void showCentered(WINDOW*,int,const string&);
-void showCentered(WINDOW*,int,const string&,int);
+void showCentered(WINDOW*,int,const string&,int,int);
 void screenLoading(WINDOW*,const string&,int);
 void screenChecking(WINDOW*,const string&,int);
 void header(WINDOW*, User *& u);
 void bottom(WINDOW*,const string&);
 void clearbody(WINDOW*);
+void printc(WINDOW*,int,int,string,int,int);
 
 void setup_color(); //for setup
 
@@ -50,11 +51,13 @@ class Button{ //for mouse
         int x = (getmaxx(win) - text.length()) / 2;
         mvwprintw(win, y, x, "%s", text.c_str());
     }
-    void showCentered(WINDOW* win, int y, const string& text,int color) {
+    void showCentered(WINDOW* win, int y, const string& text,int color, int style) {
         int x = (getmaxx(win) - text.length()) / 2;
-        wattron(win,A_BOLD | COLOR_PAIR(color));
+        if (style == 1) wattron(win,A_BOLD);
+        if (style == 2) wattron(win,A_DIM);
+        wattron(win,COLOR_PAIR(color));
         mvwprintw(win, y, x, "%s", text.c_str());
-        wattroff(win,A_BOLD | COLOR_PAIR(color));
+        wattroff(win,A_BOLD | A_DIM | COLOR_PAIR(color));
     }
 
     void showSpinner(WINDOW* win, const char* message, int y, int x, int duration_ms) {
@@ -99,8 +102,8 @@ void screenChecking(WINDOW* win,const string& text ,int duration){
         string load=" ";
 
         werase(win);
+        wattron(win,A_BOLD | COLOR_PAIR(2));
         box(win,0,0);
-        wattron(win,A_BOLD | COLOR_PAIR(4));
         showCentered(win,10,text);
         wattron(win,COLOR_PAIR(10));
         for (i=0;i<21;i++){
@@ -110,7 +113,7 @@ void screenChecking(WINDOW* win,const string& text ,int duration){
             load+=" ";
         }
         sleep(1);
-        wattroff(win,COLOR_PAIR(10) | A_BOLD | COLOR_PAIR(4));
+        wattroff(win,COLOR_PAIR(10) | A_BOLD | COLOR_PAIR(2));
         werase(win);
         box(win,0,0);
         wrefresh(win);
@@ -118,15 +121,21 @@ void screenChecking(WINDOW* win,const string& text ,int duration){
 
 
 void header(WINDOW* win,User* & u,const string& menu){
+
     //User    *u;
-    //u = Auth::getData(uname);
-    wattron(win,A_BOLD);
+    //u = Auth::getData(uname); // wait for role update
+
+    wattron(win,A_BOLD | COLOR_PAIR(4));
     showCentered(win,1,"-- WeEGCO Menu System --");
-    wattron(win,COLOR_PAIR(4));
-    showCentered(win,2,"Welcome Student : "+u->username+ "     ID : "+to_string(u->id));
     wattroff(win,COLOR_PAIR(4));
-    showCentered(win,3,"* "+menu+" *");
+    wattron(win,COLOR_PAIR(7));
+    string role = "student";
+    if (role == "student") showCentered(win,2,"Welcome Student : "+u->username+ "     ID : "+to_string(u->id));
+    if (role == "teachert") showCentered(win,2,"Welcome Teacher : "+u->username+ "     ID : "+to_string(u->id));
+    if (role == "staff") showCentered(win,2,"Welcome Staff : "+u->username+ "     ID : "+to_string(u->id));
+    wattroff(win,COLOR_PAIR(7));
     wattroff(win, A_BOLD);
+    showCentered(win,3,"* "+menu+" *");
     mvwhline(win, 4, 1, ACS_HLINE, 78);
     wrefresh(win);
     //delete u;
@@ -140,27 +149,42 @@ void bottom(WINDOW* win,const string& text){
     //mvwhline(win,22,0,ACS_LTEE,1);   
     //mvwhline(win,22,79,ACS_RTEE,1);
 
+    wmove(win,21,3);
+    wclrtoeol(win);
+    box(win,0,0);
     mvwprintw(win,21,3,text.c_str());
     wrefresh(win);
 }
 
 void clearbody(WINDOW* win){
     int i;
-    for (i=5;i<20;i++)
+    for (i=5;i<20;i++) 
         mvwprintw(win,i,0,"\n");
-    wrefresh(win);
     box(win,0,0);
+    wrefresh(win);
+
+}
+
+
+void printc(WINDOW* win, int y, int x, string text, int color, int style ){
+    if (style==1) wattron(win,A_BOLD);
+    if (style==2) wattron(win,A_DIM);
+    wattron(win,COLOR_PAIR(color));
+    mvwprintw(win,y,x,text.c_str());
+    wattroff(win,COLOR_PAIR(color) | A_BOLD | A_DIM);
+    wrefresh(win);
 }
 
 
 void setup_color(){
     //Font
+    init_pair(0, COLOR_BLACK, -1); // Default
     init_pair(1, COLOR_RED, -1); // Errors
     init_pair(2, COLOR_YELLOW, -1); // Warnings   
     init_pair(3, COLOR_GREEN, -1);   // Success / active
     init_pair(4, COLOR_CYAN, -1);    // Prompts or info
-    init_pair(5, COLOR_BLUE, -1);
-    init_pair(6, COLOR_MAGENTA, -1);
+    init_pair(5, COLOR_BLUE, -1); // Menu?
+    init_pair(6, COLOR_MAGENTA, -1); //Dont know
     init_pair(7, COLOR_WHITE, -1);   // Highlighted text (menu selection)
     //Background
     init_pair(9, -1, COLOR_GREEN);   // Highlighted
