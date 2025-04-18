@@ -7,4 +7,4 @@ run: main.cpp
 test: UItest.cpp
 	gcc Timetable.h -lncurses
 prac: UIprac
-	g++ UIprac/UIprac6.cpp -lncurses
+	g++ UIprac/UIprac7.cpp -lncurses
